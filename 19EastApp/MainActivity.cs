@@ -10,15 +10,18 @@ using System.Net;
 using System.Json;
 using System.IO;
 using System.Collections.Generic;
+using System.Net.Http;
+
 
 namespace _19EastApp
 {
-    [Activity(Label = "19East Gigs", MainLauncher = true, Icon = "@drawable/logo")]
+    [Activity(Label = "19East Gigs", MainLauncher = true, Icon = "@drawable/logo", Theme = "@style/MyCustomTheme")]
     public class MainActivity : Activity
     {
-
+        private GigsListAdapter adapter;
         protected override async void OnCreate(Bundle bundle)
         {
+
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource
@@ -27,8 +30,9 @@ namespace _19EastApp
             // Get our button from the layout resource,
             // and attach an event to it
             List<Gig> Gigs = new List<Gig>();
-
+            
             ListView listView = FindViewById<ListView>(Resource.Id.GigList);
+            EditText filterList = FindViewById<EditText>(Resource.Id.filterList);
 
             try
             { 
@@ -37,7 +41,7 @@ namespace _19EastApp
                 ParseAndDisplay(json, ref Gigs);
 
 
-                GigsListAdapter adapter = new GigsListAdapter(this, Gigs);
+                adapter = new GigsListAdapter(this, Gigs);
                 listView.Adapter = adapter;
             }
             catch (WebException ex)
@@ -46,11 +50,17 @@ namespace _19EastApp
                 throw;
                 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("An error has occured");
+                Console.WriteLine("An error has occured -->" + ex.Message);
                 throw;
             }
+
+
+            filterList.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) =>
+            {
+                adapter.Filter.InvokeFilter(e.Text.ToString().ToLower());
+            };
             
         }
 
@@ -59,10 +69,44 @@ namespace _19EastApp
         private async Task<JsonValue> FetchGigsAsync(string url)
         {
             // Create an HTTP web request using the URL:
+            HttpClient client = new HttpClient();
+            client.Timeout = TimeSpan.FromMilliseconds(2000);
+            
+            client.MaxResponseContentBufferSize = 256000;
+            try {
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(content);
+                    JsonValue jsonDoc = await Task.Run(() => JsonObject.Parse(content));
+                    return jsonDoc;
+                } else
+                {
+                    Console.WriteLine("URL Error" + response.StatusCode.ToString());
+                    Android.Widget.Toast.MakeText(this, "Error in fetching. Status code " + response.StatusCode, Android.Widget.ToastLength.Long).Show();
+                    throw new Exception("Something wrong just hapenz");
+                }
+            } catch (TaskCanceledException ex) { 
+                 Console.WriteLine("Error: " + ex.Message);
+                 Console.WriteLine(ex.InnerException.Message);
+                throw ex;
+            } catch (Exception ex)
+            {
+                Console.WriteLine("Error" + ex.Message);
+                return null;
+            }
+            finally
+            {
+
+            }
+            /*
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
             request.ContentType = "application/json";
             request.Method = "GET";
-
+            
             // Send the request to the server and wait for the response:
             using (WebResponse response = await request.GetResponseAsync())
             {
@@ -78,6 +122,7 @@ namespace _19EastApp
                     return jsonDoc;
                 }
             }
+            */
         }
 
         private void ParseAndDisplay(JsonValue json, ref List<Gig> gigs )
@@ -108,6 +153,8 @@ namespace _19EastApp
             // Extract the "stationName" (location string) and write it to the location TextBox:
             //Console.WriteLine(items[0].ToString());
         }
+
+       
 
 
     }

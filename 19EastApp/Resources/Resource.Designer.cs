@@ -63,14 +63,17 @@ namespace _19EastApp
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050002
-			public const int GigList = 2131034114;
+			// aapt resource value: 0x7f060003
+			public const int GigList = 2131099651;
 			
-			// aapt resource value: 0x7f050001
-			public const int event_date = 2131034113;
+			// aapt resource value: 0x7f060001
+			public const int event_date = 2131099649;
 			
-			// aapt resource value: 0x7f050000
-			public const int event_description = 2131034112;
+			// aapt resource value: 0x7f060000
+			public const int event_description = 2131099648;
+			
+			// aapt resource value: 0x7f060002
+			public const int filterList = 2131099650;
 			
 			static Id()
 			{
@@ -119,6 +122,25 @@ namespace _19EastApp
 			}
 			
 			private String()
+			{
+			}
+		}
+		
+		public partial class Style
+		{
+			
+			// aapt resource value: 0x7f050000
+			public const int MyCustomTheme = 2131034112;
+			
+			// aapt resource value: 0x7f050001
+			public const int WindowTitleBackground = 2131034113;
+			
+			static Style()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Style()
 			{
 			}
 		}

@@ -10,19 +10,20 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
-
+using Object = Java.Lang.Object;
 namespace _19EastApp
 {
-    class GigsListAdapter : BaseAdapter<Gig>
+    class GigsListAdapter : BaseAdapter<Gig>, IFilterable
     {
         List<Gig> items;
         Activity context;
+        private List<Gig> _originalData;
         public GigsListAdapter(Activity context, List<Gig> items) 
             : base()
         {
             this.context = context;
             this.items = items;
-
+            Filter = new GigsFilter(this);
         }
         public override Gig this[int position]
         {
@@ -38,6 +39,11 @@ namespace _19EastApp
             {
                 return items.Count;
             }
+        }
+
+        public Filter Filter
+        {
+            get; private set;
         }
 
         public override long GetItemId(int position)
@@ -59,5 +65,57 @@ namespace _19EastApp
 
             return view;
         }
+
+
+        private class GigsFilter : Filter
+        {
+            private readonly GigsListAdapter _adapter; 
+
+            public GigsFilter( GigsListAdapter adapter)
+            {
+                _adapter = adapter;
+            }
+
+                
+            protected override FilterResults PerformFiltering(ICharSequence constraint)
+            {
+                var returnObj = new FilterResults();
+
+                var results = new List<Gig>();
+                if(_adapter._originalData  == null)
+                {
+                    _adapter._originalData = _adapter.items;
+                }
+
+                if (constraint == null) return returnObj;
+
+                if (_adapter._originalData != null && _adapter._originalData.Any())
+                {
+                    results.AddRange(
+                        _adapter._originalData.Where(
+                            gig => gig.Description.ToLower().Contains(constraint.ToString()))
+                        );
+                }
+
+                returnObj.Values = FromArray(results.Select( r=> r.ToJavaObject()).ToArray());
+                returnObj.Count = results.Count;
+
+                constraint.Dispose();
+
+                return returnObj;
+            }
+
+            protected override void PublishResults(ICharSequence constraint, FilterResults results)
+            {
+                using (var values = results.Values)
+                    _adapter.items = values.ToArray<Object>()
+                        .Select(r => r.ToNetObject<Gig>()).ToList();
+                _adapter.NotifyDataSetChanged();
+
+                constraint.Dispose();
+                results.Dispose();
+            }
+        }
+
     }
 }
