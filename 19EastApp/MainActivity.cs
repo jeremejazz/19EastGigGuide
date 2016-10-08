@@ -1,14 +1,10 @@
 ﻿using System;
 using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Android.OS;
 using System.Threading.Tasks;
 using System.Net;
 using System.Json;
-using System.IO;
 using System.Collections.Generic;
 using System.Net.Http;
 
@@ -59,7 +55,7 @@ namespace _19EastApp
 
             filterList.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) =>
             {
-                adapter.Filter.InvokeFilter(e.Text.ToString().ToLower());
+                //adapter.Filter.InvokeFilter(e.Text.ToString().ToLower());
             };
             
         }
@@ -100,7 +96,7 @@ namespace _19EastApp
             }
             finally
             {
-
+                client.Dispose();
             }
             /*
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));

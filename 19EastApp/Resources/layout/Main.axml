@@ -4,14 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:minWidth="25px"
-    android:minHeight="25px">
+    android:minHeight="25px"
+   android:focusable="true" 
+    android:focusableInTouchMode="true"
+  >
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/filterList"
         android:maxLines="1"
-        android:inputType="text"
-        />
+        android:inputType="text" />
     <ListView
         android:fastScrollEnabled="true"
         android:id="@+id/GigList"

@@ -1,16 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
 using Object = Java.Lang.Object;
+using System;
+
 namespace _19EastApp
 {
     class GigsListAdapter : BaseAdapter<Gig>, IFilterable
@@ -89,8 +86,9 @@ namespace _19EastApp
 
                 if (constraint == null) return returnObj;
 
-                if (_adapter._originalData != null && _adapter._originalData.Any())
+                if (_adapter._originalData != null && _adapter._originalData.Any() && constraint.ToString() != null)
                 {
+                    Console.WriteLine("constraint: " + constraint.ToString());
                     results.AddRange(
                         _adapter._originalData.Where(
                             gig => gig.Description.ToLower().Contains(constraint.ToString()))
