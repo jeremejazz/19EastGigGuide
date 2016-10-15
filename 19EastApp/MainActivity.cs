@@ -10,13 +10,14 @@ using System.Net;
 using System.Json;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _19EastApp
 {
     [Activity(Label = "19East Gigs", MainLauncher = true, Icon = "@drawable/logo")]
     public class MainActivity : Activity
     {
-
+        private List<Gig> Gigs;
         protected override async void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -26,10 +27,11 @@ namespace _19EastApp
 
             // Get our button from the layout resource,
             // and attach an event to it
-            List<Gig> Gigs = new List<Gig>();
+            Gigs = new List<Gig>();
 
             ListView listView = FindViewById<ListView>(Resource.Id.GigList);
-
+            EditText filterList = FindViewById<EditText>(Resource.Id.filterList);
+            GigsListAdapter adapter;
             try
             { 
                 JsonValue json = await FetchGigsAsync(GetString(Resource.String.gigs_url));
@@ -37,7 +39,7 @@ namespace _19EastApp
                 ParseAndDisplay(json, ref Gigs);
 
 
-                GigsListAdapter adapter = new GigsListAdapter(this, Gigs);
+                adapter = new GigsListAdapter(this, Gigs);
                 listView.Adapter = adapter;
             }
             catch (WebException ex)
@@ -51,7 +53,27 @@ namespace _19EastApp
                 Console.WriteLine("An error has occured");
                 throw;
             }
-            
+
+            filterList.TextChanged += (object sender, Android.Text.TextChangedEventArgs e) =>
+            {
+                string searchText = e.Text.ToString();
+
+                if (searchText != "")
+                {
+                    var newList =
+                        from items in Gigs
+                        where items.Description.ToLower().Contains(searchText)
+                        select items;
+                    listView.Adapter = new GigsListAdapter(this, newList.ToList());
+                    Console.WriteLine("Not Blank");
+
+                }
+                else
+                {
+                    listView.Adapter = adapter;
+                    Console.WriteLine("Blank");
+                }
+            };
         }
 
 
@@ -96,8 +118,7 @@ namespace _19EastApp
                 foreach (JsonObject item in json)
                 {
 
-
-
+ 
                     gigs.Add(new Gig() { EventDate = DateTime.Parse(item["event_date"]) , Description = item["event_gig"] });
 
                 }

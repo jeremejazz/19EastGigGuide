@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <style name="MyCustomTheme" parent="android:Theme.Material.Light">
+      <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+    </style>
+    <style name="WindowTitleBackground">
+      <item name="android:background">#ffbb00</item>
+    </style>
+</resources>
