@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.jeremecausing.x19eastapp" android:versionCode="1" android:installLocation="auto" android:versionName="0.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.jeremecausing.gigs19east" android:versionCode="1" android:installLocation="auto" android:versionName="0.1">
 	<application android:label="19East Gigs" android:icon="@drawable/Logo"></application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="21" />
