@@ -14,14 +14,15 @@ using System.Linq;
 
 namespace _19EastApp
 {
-    [Activity(Label = "19East Gigs", MainLauncher = true, Icon = "@drawable/logo")]
+    [Activity(Label = "19East Gigs",  Icon = "@drawable/logo", Theme ="@style/MyTheme")]
     public class MainActivity : Activity
     {
         private List<Gig> Gigs;
         protected override async void OnCreate(Bundle bundle)
         {
+                    
             base.OnCreate(bundle);
-
+            RequestWindowFeature(WindowFeatures.NoTitle);
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
@@ -65,13 +66,13 @@ namespace _19EastApp
                         where items.Description.ToLower().Contains(searchText)
                         select items;
                     listView.Adapter = new GigsListAdapter(this, newList.ToList());
-                    Console.WriteLine("Not Blank");
+ 
 
                 }
                 else
                 {
                     listView.Adapter = adapter;
-                    Console.WriteLine("Blank");
+ 
                 }
             };
         }

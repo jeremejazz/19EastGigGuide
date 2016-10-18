@@ -53,7 +53,7 @@ namespace _19EastApp
                 view = context.LayoutInflater.Inflate(Resource.Layout.event_row, null);
 
             view.FindViewById<TextView>(Resource.Id.event_description).Text = item.Description;
-            view.FindViewById<TextView>(Resource.Id.event_date).Text = item.EventDate.ToShortDateString();
+            view.FindViewById<TextView>(Resource.Id.event_date).Text = item.EventDate.ToLongDateString();
             
  
 
