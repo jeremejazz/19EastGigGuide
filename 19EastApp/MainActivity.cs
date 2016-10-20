@@ -7,6 +7,8 @@ using System.Net;
 using System.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Android.Views;
+using System.Net.Http;
 
 namespace _19EastApp
 {
